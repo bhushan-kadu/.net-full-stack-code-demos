@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/21.1.3/css/dx.common.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/21.1.3/css/dx.light.css" />
+    <script src="https://cdn3.devexpress.com/jslib/21.1.3/js/dx.all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <title>Document</title>
+    <style>
+        iframe {
+            width: 100%;
+            height: 100%;
+        }
+        
+        body,
+        html {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="docPreviewPopup">
+    </div>
+    <label>for png and jpeg/jpg/pdf files</label>
+    <input type="file" id="filePicker">
+    <div id="showBtn"></div>
+    <div id="printBtn"></div>
+    <iframe allowfullscreen id="iframe">
+        </iframe>
+    <!-- <iframe src='https://docs.google.com/viewer?url=https://download.microsoft.com/download/1/4/E/14EDED28-6C58-4055-A65C-23B4DA81C4DE/Financial%20Sample.xlsx&embedded=true'></iframe> -->
+    <!-- <iframe src='https://docs.google.com/viewer?url=https://file-examples-com.github.io/uploads/2017/02/file-sample_100kB.doc&embedded=true'></iframe> -->
+
+
+    <br>
+
+    <script>
+        var src = "";
+        const templatepupup = () => {
+            return $("<iframe ></iframe>").attr({
+                src
+            })
+        }
+
+        var pupup = $('#docPreviewPopup').dxPopup({
+            visible: false,
+            contentTemplate: templatepupup
+        }).dxPopup('instance');
+
+        $("#showBtn").dxButton({
+            text: "showDoc",
+            onClick: () => {
+                if (src) {
+                    pupup.show()
+                } else {
+                    DevExpress.ui.notify("select a document", "error", 3000)
+                }
+            }
+        })
+        $('#printBtn').dxButton({
+            text: "printDoc",
+            onClick: () => {
+                $('iframe').get(0).contentWindow.print();
+            }
+        })
+        $('#filePicker').on("change", (e) => {
+            let file = e.currentTarget.files[0];
+            let blobUrl = "";
+            if (file.name.split(".")[1] !== "pdf") {
+                var reader = new FileReader()
+                reader.onload = function() {
+                    var arrayBuffer = this.result
+                    array = new Uint8Array(arrayBuffer);
+                    var doc = new jspdf.jsPDF()
+
+                    doc.addImage(array, file.name.split(".")[1], 0, 0, 210, 0, 'image');
+
+                    var blobPDF = new Blob([doc.output('blob')], {
+                        type: 'application/pdf'
+                    });
+                    blobUrl = URL.createObjectURL(blobPDF); //<--- THE ERROR APPEARS HERE
+                    src = blobUrl + "#zoom=FitH";
+                    $('#iframe').attr("src", src)
+                }
+                reader.readAsArrayBuffer(file)
+            } else {
+                blobUrl = URL.createObjectURL(file)
+                src = blobUrl + "#zoom=FitH";
+                $('#iframe').attr("src", src)
+            }
+
+
+        })
+    </script>
+
+</body>
+
+</html>

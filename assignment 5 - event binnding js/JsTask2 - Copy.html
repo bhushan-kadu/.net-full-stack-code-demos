@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <button id="btnClickMe">Click Me</button>
+    <script>
+        /*
+         ** COMPLETE THE BIND EVENT FUNCTION SUCH THAT IT WILL BIND A 
+         ** ONCLICK EVENT TO BUTTON WHICH WILL SHOW A ALERT
+         ** WRITE A TRIGGER EVENT FUNCTION WHICH WILL TRIGGER ONCLICK EVENT MANUALLY
+         */
+        let buttonClickMe = document.getElementById('btnClickMe');
+
+        //even binding logic
+        function bindEvent() {
+            buttonClickMe.addEventListener('click', function() {
+                alert();
+            });
+        }
+
+        //even trigger logic
+        function triggerEvent() {
+            buttonClickMe.click();
+        }
+
+        bindEvent();
+        triggerEvent();
+    </script>
+
+</body>
+
+</html>

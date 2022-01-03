@@ -1,0 +1,488 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<div class="pnlHeader">
+    <div style="font-size: 1.3em; color: #00008b; font-weight: bold;">Country List</div>
+    <button id="btnCountryGridFetch">Fetch</button>
+    <button id="btnCountryGridDelete">Delete</button>
+    <button id="btnCountryGridAdd">Add</button>
+    <button id="btnCountryGridClear">Clear</button>
+    <button id="btnCountryGridClose">Close</button>
+</div>
+<div style="padding: 7px 10px 1px 10px; ">
+    <div class="pnlFilters">
+        <div class="form-field" style="flex: 2;">
+            <div class="form-field-label">
+                <div>Country Name</div>
+            </div>
+            <div class="form-field-input">
+                <input type="text" id="ddlCountryNameFilter">
+            </div>
+        </div>
+
+        <div class="form-field" style="flex: 2;">
+            <div class="form-field-label">
+                <div>Country Code</div>
+            </div>
+            <div class="form-field-input">
+                <input type="text" id="ddlCountryCodeFilter">
+            </div>
+        </div>
+
+    </div>
+    <div id="grdCountryList"></div>
+</div>
+<div id="dlgCountryConfirmDelete"></div>
+
+<div id="pnlAddCountry">
+    <div class="form-field">
+        <div class="form-field-label">
+            <div>
+                Country Name:
+                <div class="requiredStar">*</div>
+            </div>
+        </div>
+        <div class="form-field-input k-textbox">
+            <input type="text" id="txtAddCountryCountryName" name="countryName" max="10" maxlength="10" required>
+        </div>
+    </div>
+
+    <div class="form-field">
+        <div class="form-field-label">
+            <div>
+                Country Code:
+                <div class="requiredStar">*</div>
+            </div>
+
+        </div>
+        <div class="form-field-input k-textbox">
+            <input type="text" id="txtAddCountryCountryCode" name="countryCode" max="10" maxlength="10" required>
+        </div>
+    </div>
+
+    <div class="form-field">
+        <div class="form-field-label">
+            <div>
+                STD Code:
+            </div>
+
+        </div>
+        <div class="form-field-input k-textbox">
+            <input type="text" id="txtAddCountryStdCode" name="stdCode" max="10" maxlength="10">
+        </div>
+    </div>
+
+    <button id="btnCountryAddFormSubmit" onclick="btnCountryAddFormSubmit_click(event)" class="center-button k-primary">Submit</button>
+    <button id="btnCountryUpdateFormSubmit" onclick="btnCountryUpdateFormSubmit_click(event)" class="center-button k-primary">Update</button>
+</div>
+
+<div id="dlgAddCountryFailure"></div>
+<div id="dlgAddCountrySuccess"></div>
+<script>
+
+
+    jQuery(function () {
+        /*------------------------- start of actions panel --------------------------*/
+        $('#btnCountryGridFetch').kendoButton({
+            click: btnCountryGridFetch_click
+        });
+        $('#btnCountryGridDelete').kendoButton({
+            click: btnCountryGridDelete_click
+        });
+        $('#btnCountryGridAdd').kendoButton({
+            click: function (event) {
+                $('#pnlAddCountry').data('kendoWindow').title("Add New Country").center().open();
+                $('#btnCountryUpdateFormSubmit').hide()
+                $('#btnCountryAddFormSubmit').show();
+            }
+        });
+        $('#btnCountryGridClear').kendoButton({
+            click: btnCountryGridClear_click
+        });
+        $('#btnCountryGridClose').kendoButton();
+
+        //confirm delete dialog
+        $('#dlgCountryConfirmDelete').kendoDialog({
+            title: 'Confirm',
+            width: '400px',
+            content: 'You are deleting 1 item. Are You Sure?',
+            buttonLayout: 'normal',
+            actions: [
+                { text: 'Yes', action: dlgCountryConfirmDelete_Yes_click },
+                { text: 'No' }
+            ],
+            visible: false
+        })
+
+        /*------------------------- end of actions panel -------------------------*/
+
+        /*------------------------- start of filter header ----------------------------*/
+
+
+        $('#ddlCountryNameFilter').kendoAutoComplete();
+        $('#ddlCountryCodeFilter').kendoAutoComplete();
+
+        /*------------------------- end of filter header -----------------------------*/
+        /*------------------------- start of grid ------------------------------------*/
+        let allCountriesKendoDatasource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: baseUrl + "country?select=forGrid",
+                    dataType: "json",
+                    type: 'GET'
+                },
+            },
+            sort: {
+                field: "countryId", dir: "desc"
+            },
+            pageSize: 18,
+            schema: {
+                model: {
+                    id: "countryId",
+                    fields: {
+                        countryId: { type: "number" },
+                        countryName: { type: "string" },
+                        countryCode: { type: "string" },
+                        stdCode: { type: "string" }
+                    }
+                }
+            },
+            change: grdCountryList_dataSourceChange
+        });
+
+        let runtimeCountryGridHeight = $(window).height() - 155;
+        $("#grdCountryList").kendoGrid({
+            columns: [{
+                selectable: true,
+                width: '6.5em',
+                headerTemplate: '<a class="k-link">Sel.</a>'
+            },
+            {
+                field: "countryName",
+                title: "Country Name"
+            },
+            {
+                field: "countryCode",
+                title: "Country Code"
+            },
+            {
+                field: "stdCode",
+                title: "STD Code"
+            }
+            ],
+            dataSource: allCountriesKendoDatasource,
+            columnMenu: true,
+            sortable: true,
+            filterable: true,
+            pageable: {
+                pageSize: 18
+            },
+            height: runtimeCountryGridHeight,
+            dataBound: grdCountryList_dataBound
+        });
+
+
+        /*------------------------- end of grid -----------------------------------*/
+
+        /*----------------------- start of Add/update contact window----------------*/
+
+        //add contact window widgets
+
+        //failure dialog
+        $("#dlgAddCountryFailure").kendoDialog({
+            title: "Alert!",
+            closable: true,
+            content: "Please Enter proper values",
+            actions: [{ text: "ok" }],
+            visible: false,
+            width: '400px',
+            buttonLayout: 'normal'
+        });
+
+        //Success dialog
+        $("#dlgAddCountrySuccess").kendoDialog({
+            title: "Success",
+            closable: true,
+            actions: [{ text: "ok" }],
+            visible: false,
+            width: '400px',
+            buttonLayout: 'normal'
+        });
+
+        //add/update contact window
+        $('#pnlAddCountry').kendoWindow({
+            width: "400px",
+            title: 'Add New Contact',
+            visible: false,
+            close: function () {
+                clearAddUpdateCountryForm();
+            }
+        }).data('kendoWindow').center();
+
+        $('#btnCountryAddFormSubmit').kendoButton()
+        $('#btnCountryUpdateFormSubmit').kendoButton()
+
+        /*------------------------- end of Add/update contact window---------------------*/
+    });
+
+    //delete confirmation dialog
+    function dlgCountryConfirmDelete_Yes_click(event) {
+        let grid = $("#grdCountryList").data('kendoGrid');
+        let selectedRows = grid.select();
+        let ids = [];
+        $.each(selectedRows, function (itr, row) {
+            let countryId = grid.dataItem(row).countryId;
+            ids.push(countryId);
+        });
+        ids = { countryIds: ids };
+
+        let requestObject = ajaxRequest(baseUrl + "country", "DELETE", ids);
+        requestObject.done(function (responseMessage, status) {
+            if (status === "success") {
+                //open sucess dialog
+                $("#dlgAddCountrySuccess").data('kendoDialog').content("Country Deleted Succesfully").open();
+                //refresh grid
+                $('#grdCountryList').data('kendoGrid').dataSource.read();
+                $('#grdCountryList').data('kendoGrid').refresh();
+            }
+        });
+        requestObject.fail(ajaxFailedCallback);
+    }
+
+    function checkForUniqueValeInGrid(fieldName, value, idToIgnore) {
+
+        let grid = $('#grdCountryList').data('kendoGrid');
+        let allRows = grid.dataSource.data();
+
+        var foundItems = allRows.find(item => item[fieldName].toString() === value);
+        if (foundItems === undefined) {
+            return true;
+        } else if (foundItems.uid === idToIgnore) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //set full name array to full name auto complete filter
+    function grdCountryList_dataSourceChange(event) {
+
+        let countryNameArray = [];
+        let countryCodeArray = [];
+        let grid = $("#grdCountryList").data('kendoGrid');
+        let gridData = grid.dataSource.data();
+
+        $.each(gridData, function (itr) {
+            let dataItem = gridData[itr];
+            countryNameArray.push(dataItem.countryName);
+            countryCodeArray.push(dataItem.countryCode);
+        })
+
+        $('#ddlCountryNameFilter').data('kendoAutoComplete').setDataSource(countryNameArray);
+        $('#ddlCountryCodeFilter').data('kendoAutoComplete').setDataSource(countryCodeArray);
+
+    }
+
+    //main panel delete button click
+    function btnCountryGridDelete_click() {
+        let dialog = $('#dlgCountryConfirmDelete').data('kendoDialog');
+        let grid = $("#grdCountryList").data('kendoGrid');
+        let rowsSelected = grid.select().length
+
+        if (rowsSelected > 0) {
+            dialog.content('<b>You are deleting ' + rowsSelected + ' items. Are You Sure?</b>');
+            dialog.open();
+        }
+    }
+
+    //submit method of add country
+    function btnCountryAddFormSubmit_click(event) {
+        let formObj = $('#pnlAddCountry');
+        let data = getAllDataFromForm(formObj);
+        let errorMessage = validateCountryFormAndReturnErrorMessageArray(data);
+
+        if (errorMessage.length === 0) {
+            let dataToSend = getCountryFromData(data);
+            let requestObject = ajaxRequest(baseUrl + "country", "POST", dataToSend);
+            requestObject.done(function (responseMessage, status) {
+                if (status === "success") {
+                    ajaxSuccessCallback("Country Added succesfully!");
+                }
+            });
+            requestObject.fail(ajaxFailedCallback);
+        } else {
+            $("#dlgAddCountryFailure").data('kendoDialog').content(errorMessage[0]).open();
+        }
+    }
+
+    function ajaxSuccessCallback(successMessage) {
+        clearAddUpdateCountryForm();
+
+        //close add contact window
+        $('#pnlAddCountry').data('kendoWindow').close();
+
+        //open sucess dialog
+        $("#dlgAddCountrySuccess").data('kendoDialog').content(successMessage).open();
+
+        //refresh grid
+        $('#grdCountryList').data('kendoGrid').dataSource.read();
+        $('#grdCountryList').data('kendoGrid').refresh();
+    }
+
+    function ajaxFailedCallback() {
+        $("#dlgAddCountryFailure").data('kendoDialog').content(errorMessage[0]).open();
+    }
+
+
+    function clearAddUpdateCountryForm() {
+        let formObj = $('#pnlAddCountry');
+        formObj.find('input').val("");
+    }
+
+
+    //bind each row click with update contact logic
+    function grdCountryList_dataBound() {
+        let grid = this;
+        grid.element.off("click", 'tbody tr[data-uid');
+        grid.element.on("click", 'tbody tr[data-uid]', function (event) {
+
+            let row = event.currentTarget;
+
+            if (!$(event.target).hasClass('k-checkbox')) {
+                openCountryAddUpdateWindow(row);
+            }
+        });
+    }
+
+    //open update contact window
+    function openCountryAddUpdateWindow(row) {
+
+        //set title and open window
+        $('#pnlAddCountry').data('kendoWindow').title("Update Contact").center().open();
+
+        let grid = $('#grdCountryList').data('kendoGrid');
+        grid.clearSelection();
+        grid.select(row);
+
+        let data = grid.dataItem(row);
+        let formFields = $('#pnlAddCountry').find('input');
+
+        $.each(formFields, function (index) {
+            let inputData = data[$(formFields[index]).attr('name')]
+            $(formFields[index]).val(inputData);
+        });
+
+        //hide the submit button
+        $('#btnCountryAddFormSubmit').hide()
+        $('#btnCountryUpdateFormSubmit').show();
+    }
+
+    function validateCountryFormAndReturnErrorMessageArray(data) {
+        let errorMessage = [];
+
+        let countryName = $("#txtAddCountryCountryName").val();
+        let countryCode = $("#txtAddCountryCountryCode").val();
+
+        if (countryName.trim() === "") {
+            errorMessage.push("Country Name Cannot be empty");
+        }
+        if (countryCode.trim() === "") {
+            errorMessage.push("Country Code Cannot be empty");
+        }
+       
+
+        let grid = $('#grdCountryList').data('kendoGrid');
+        let selectedRow = grid.select();
+        let selectedIndex = selectedRow.index();
+        if (selectedIndex !== -1) {
+            let currentRow = grid.dataItems()[selectedIndex];
+
+            if (!checkForUniqueValeInGrid("countryName", data.countryName, currentRow.uid)) {
+                errorMessage.push("Country already present");
+            }
+            if (!checkForUniqueValeInGrid("countryCode", data.countryCode, currentRow.uid)) {
+                errorMessage.push("Country Code already present");
+            }
+        } else {
+            if (!checkForUniqueValeInGrid("countryName", data.countryName)) {
+                errorMessage.push("Country already present");
+            }
+            if (!checkForUniqueValeInGrid("countryCode", data.countryCode)) {
+                errorMessage.push("Country Code already present");
+            }
+        }
+        return errorMessage;
+
+    }
+
+    //update contact btn click
+    function btnCountryUpdateFormSubmit_click(event) {
+
+        let grid = $('#grdCountryList').data('kendoGrid');
+        let formObj = $('#pnlAddCountry');
+        let data = getAllDataFromForm(formObj);
+        let selectedRow = grid.select();
+        let selectedIndex = selectedRow.index();
+        let currentRow = grid.dataItems()[selectedIndex];
+        let errorMessage = validateCountryFormAndReturnErrorMessageArray(data);
+
+        if (errorMessage.length === 0) {
+            data.countryId = currentRow.countryId;
+            dataToSend = getCountryFromData(data)
+            let requestObject = ajaxRequest(baseUrl + "country", "PUT", dataToSend);
+            requestObject.done(function (responseMessage, status) {
+                if (status === "success") {
+                    ajaxSuccessCallback("Country Updated succesfully!")
+                }
+            });
+            requestObject.fail(ajaxFailedCallback);
+
+        } else {
+            $("#dlgAddCountryFailure").data('kendoDialog').content(errorMessage[0]).open();
+        }
+    }
+
+    function getCountryFromData(data) {
+        return {
+            countryId: data.countryId ? data.countryId : 0,
+            countryCode: data.countryCode,
+            countryName: data.countryName,
+            stdCode: data.stdCode
+        }
+    }
+
+  
+    function btnCountryGridFetch_click(event) {
+
+        let grid = $('#grdCountryList').data('kendoGrid');
+        let filters = [];
+        let countryName = $('#ddlCountryNameFilter').data('kendoAutoComplete').value();
+        let countryCode = $('#ddlCountryCodeFilter').data('kendoAutoComplete').value();
+
+        if (countryName !== "") {
+            filters.push({ field: "countryName", operator: "eq", value: countryName });
+        }
+        if (countryCode !== "") {
+            filters.push({ field: "countryCode", operator: "eq", value: countryCode });
+        }
+
+        let filterToBeApplied = {
+            logic: 'and',
+            filters: filters
+        };
+
+        grid.dataSource.filter(filterToBeApplied);
+    }
+
+    function btnCountryGridClear_click(event) {
+        //clear to default
+        $('#ddlCountryNameFilter').val("");
+        $('#ddlCountryCodeFilter').val("");
+        $('#txtStdCodeFilter').val("");
+
+        //reload grid
+        let grid = $('#grdCountryList').data('kendoGrid');
+        grid.dataSource.filter({});
+    }
+
+</script>

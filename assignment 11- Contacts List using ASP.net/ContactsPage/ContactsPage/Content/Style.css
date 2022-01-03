@@ -1,0 +1,141 @@
+/*new*/
+
+body {
+    margin: 0;
+    font-size: 1em;
+    /*font-family: sans-serif;*/
+}
+
+header {
+    display: flex;
+    background-color: #e6f2ff;
+    padding: 0.3em;
+}
+
+#pnlHead {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-content: flex-end;
+}
+
+.navigation-ui {
+    font-size: 1.1em;
+    display: flex;
+    flex-flow: row wrap;
+    margin-bottom: 0.5em;
+    color: #00008b;
+}
+
+#imgLogo {
+    float: left;
+    height: 52px;
+    width: 78px;
+    margin-right: 2em;
+}
+
+.head-links {
+    background-color: lavender;
+    padding: 0.3em;
+    margin-right: 0.5em;
+    border-radius: 3px;
+}
+
+.overflow {
+    height: 200px;
+}
+
+a#submitButton {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    width: 100%;
+}
+
+.form-styling {
+    border: 1px solid #31a8db;
+    margin: 1em;
+    width: 30%;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+}
+
+.form-field {
+    padding: 0 0.9em 0 0;
+}
+
+.form-field-label {
+    /* font-size: 0.7em; */
+    margin-bottom: 0.3em;
+}
+
+.requiredStar {
+    color: red;
+    font-size: 0.8em;
+    margin-left: 5px;
+    display: inline;
+    margin-left: 0px;
+}
+
+.k-textbox,
+.k-autocomplete,
+.k-dropdown,
+.k-datepicker {
+    margin-bottom: 0.9em;
+    width: 100% !important;
+    font-weight: bold !important;
+}
+
+#btnContactFormSubmit,
+#btnContactFormUpdate {
+    display: block;
+    margin: auto !important;
+}
+
+.pnlFilters {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    width: 92%;
+}
+
+.pnlHeader {
+    padding-left: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    padding-right: 0.8em;
+    display: flex;
+    align-items: flex-start;
+    border-bottom: 2px solid rgb(10, 99, 134);
+}
+
+.pnlFilters div,
+.pnlHeader div {
+    flex: 1;
+}
+
+.k-dialog .k-button {
+    margin-left: 1.4em !important;
+}
+
+.k-dialog .k-dialog-buttongroup {
+    padding-right: 1.4em !important;
+    padding-bottom: 1em !important;
+    border: none !important;
+}
+
+button {
+    margin-left: 0.4em !important;
+    font-weight: bold !important;
+    padding-top: 0.2em !important;
+    padding-bottom: 0.2em !important;
+}
+
+.invisible {
+    display: none !important;
+}
+
+.visible {
+    display: block;
+}

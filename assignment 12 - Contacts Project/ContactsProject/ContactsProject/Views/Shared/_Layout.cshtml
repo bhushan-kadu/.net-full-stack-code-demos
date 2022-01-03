@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/kendo")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+
+    <header>
+        <div><img src="~/Content/logo.png" alt="logo" id="imgLogo" /> </div>
+        <div id="pnlHead">
+            <div style="margin: 0.8em 1em 1.5em 0; display: flex;">
+                Welcome
+                <div style="margin-left: 1em;"> OFFICEBOX SUPPORT</div>
+            </div>
+            <div class="navigation-ui">
+                @{
+                    var headerLinkCSSClass = new { @class = "head-links" };
+                }
+                <div>
+                    @Html.ActionLink("CONTACT LIST", "index", "home", null, headerLinkCSSClass)
+                </div>
+                <div>
+                    @Html.ActionLink("COUNTRY LIST", "countryindex", "country", null, headerLinkCSSClass)
+                </div>
+                <div>
+                    @Html.ActionLink("STATE LIST", "stateindex", "state", null, headerLinkCSSClass)
+                </div>
+            </div>
+        </div>
+        <div style="margin: 0.3em 0.3em 0 0">
+            <button id="btnHeaderHelp">Help</button>
+            <button id="btnHeaderHome">Home</button>
+            <button id="btnHeaderLogout">Logout</button>
+        </div>
+
+    </header>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/kendojs")
+    @Scripts.Render("~/bundles/utils")
+    @RenderSection("scripts", required: false)
+
+    <div>
+        @RenderBody()
+    </div>
+
+    <script>
+        jQuery(function () {
+
+            /*------------------------- start of header ---------------------------------*/
+            $('#btnHeaderHelp').kendoButton();
+            $('#btnHeaderHome').kendoButton();
+            $('#btnHeaderLogout').kendoButton();
+            /*------------------------- end of header -----------------------------------*/
+        });
+    </script>
+
+</body>
+</html>

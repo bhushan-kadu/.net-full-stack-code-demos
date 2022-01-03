@@ -1,0 +1,1061 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="pnlHeader">
+    <div style="font-size: 1.3em; color: #00008b; font-weight: bold;">Contact List</div>
+    <button id="btnGridFetch">Fetch</button>
+    <button id="btnGridDelete">Delete</button>
+    <button id="btnGridUpload">Upload</button>
+    <button id="btnGridAdd">Add</button>
+    <button id="btnFilterClear">Clear</button>
+    <button id="btnGridClose">Close</button>
+</div>
+
+<div style="padding: 7px 10px 1px 10px; ">
+    <div class="pnlFilters">
+        <div class="form-field">
+            <div class="form-field-label">
+                <div>
+                    DOB From Date
+                    <div class="requiredStar">*</div>
+                </div>
+            </div>
+            <div class="form-field-input">
+                <input id="dtpFilterDateOfBirthFrom" required>
+            </div>
+        </div>
+        <div class="form-field">
+            <div class="form-field-label">
+                <div>
+                    DOB To Date
+                    <div class="requiredStar">*</div>
+                </div>
+
+            </div>
+            <div class="form-field-input">
+                <input id="dtpFilterDateOfBirthTo" required>
+            </div>
+        </div>
+
+        <div class="form-field" style="flex: 2;">
+            <div class="form-field-label">
+                <div>
+                    Contact Name
+                </div>
+
+            </div>
+            <div class="form-field-input">
+                <input id="ddlFilterFullName" type="text">
+            </div>
+        </div>
+
+        <div class="form-field" style="flex: 2;">
+            <div class="form-field-label">
+                <div>Country</div>
+            </div>
+            <div class="form-field-input">
+                <input type="text" id="ddlFilterCountry">
+            </div>
+        </div>
+
+        <div class="form-field" style="flex: 2;">
+            <div class="form-field-label">
+                <div>State</div>
+            </div>
+            <div class="form-field-input">
+                <select id="ddlFilterState"></select>
+            </div>
+        </div>
+    </div>
+
+    <div id="grdContactsList"></div>
+</div>
+
+
+<div id="dlgConfirmDelete"></div>
+
+<div id="pnlUploadContacts">
+    <div>
+        <button id="btnUploadContatGetSampleSheet" class="center-button">Get Sample Sheet</button>
+    </div>
+    <div class="upload-sheet-panel">
+        <input id="fileUpldChooseExelSheet" type="file">
+    </div>
+    <div>
+        <div>Instructions :</div>
+        <ul>
+            <li>FirstName and LastName should be of 15 characters.</li>
+            <li>The state should be associated with the country otherwise it will be an invalid state.</li>
+            <li>Date of Birth must be 18 years back from the day when you are uploading the contacts.</li>
+        </ul>
+    </div>
+</div>
+<div id="pnlAddContact">
+    <div class="form-field">
+        <div class="form-field-label">
+            <div>
+                First Name:
+                <div class="requiredStar">*</div>
+            </div>
+        </div>
+        <div class="form-field-input k-textbox">
+            <input type="text" id="txtFirstName" name="firstName" max="15" maxlength="15" required>
+        </div>
+    </div>
+
+    <div class="form-field">
+        <div class="form-field-label">
+            <div>
+                Last Name:
+                <div class="requiredStar">*</div>
+            </div>
+
+        </div>
+        <div class="form-field-input k-textbox">
+            <input type="text" id="txtLastName" name="lastName" max="15" maxlength="15" required>
+        </div>
+    </div>
+
+    <div class="form-field">
+        <div class="form-field-label">
+            <div>
+                Date of Birth:
+                <div class="requiredStar">*</div>
+            </div>
+
+        </div>
+        <div class="form-field-input">
+            <input id="dtpAddContactDateOfBirth" name="dob" required>
+        </div>
+    </div>
+
+    <div class="form-field">
+        <div class="form-field-label">
+            <div>
+                Country:
+                <div class="requiredStar">*</div>
+            </div>
+
+        </div>
+        <div class="form-field-input">
+            <input type="text" id="ddlAddContactCountry" name="country" required>
+        </div>
+    </div>
+
+    <div class="form-field">
+        <div class="form-field-label">
+            <div>State:</div>
+        </div>
+        <div class="form-field-input">
+            <input id="ddlAddContactState" name="stateId">
+        </div>
+    </div>
+
+    <div class="form-field">
+        <div class="form-field-label">
+            <div>
+                Email:
+                <div class="requiredStar">*</div>
+            </div>
+
+        </div>
+        <div class="form-field-input k-textbox">
+            <input type="email" id="txtEmail" required name="emailId">
+        </div>
+    </div>
+
+    <div class="form-field">
+        <div class="form-field-label">
+            <div>
+                Phone:
+                <div class="requiredStar">*</div>
+            </div>
+
+        </div>
+        <div class="form-field-input k-textbox">
+            <input type="tel" pattern="[0-9]{10}" max="10" min="10" maxlength="10" id="txtPhone" required name="phone">
+        </div>
+    </div>
+
+    <button id="btnContactFormSubmit" onclick="btnContactFormSubmit_click(event)" class="center-button k-primary">Submit</button>
+    <button id="btnContactFormUpdate" onclick="btnContactFormUpdate_click(event)" class="center-button k-primary">Update</button>
+</div>
+
+<div id="dlgAddContactFailure"></div>
+<div id="dlgAddContactSuccess"></div>
+<script>
+
+
+
+    jQuery(function () {
+        /*------------------------- start of actions panel --------------------------*/
+        $('#btnGridFetch').kendoButton({
+            click: btnGridFetch_click
+        });
+        $('#btnGridDelete').kendoButton({
+            click: btnGridDelete_click
+        });
+        $('#btnGridAdd').kendoButton({
+            click: function (event) {
+                $('#pnlAddContact').data('kendoWindow').title("Add New Contact").center().open();
+                $('#btnContactFormUpdate').hide()
+                $('#btnContactFormSubmit').show();
+            }
+        });
+        $('#btnGridUpload').kendoButton({
+            click: btnGridUpload_click
+        });
+        $('#btnFilterClear').kendoButton({
+            click: btnGridClear_click
+        });
+        $('#btnGridClose').kendoButton();
+
+        //confirm delete dialog
+        $('#dlgConfirmDelete').kendoDialog({
+            title: 'Confirm',
+            width: '400px',
+            content: 'You are deleting 1 item. Are You Sure?',
+            buttonLayout: 'normal',
+            actions: [
+                { text: 'Yes', action: dlgConfirmDelete_Yes_click },
+                { text: 'No' }
+            ],
+            visible: false
+        })
+
+        /*------------------------- end of actions panel -------------------------*/
+
+        /*------------------------- start of filter header ----------------------------*/
+        //get 18 year back date
+        let dateObjToday = (new Date());
+        let before18Year = dateObjToday.getFullYear() - 18;
+        let dateToday = dateObjToday.getDate();
+
+        //date of birth input date for only 18+
+        $('#dtpFilterDateOfBirthFrom').kendoDatePicker({
+            max: new Date(before18Year, dateObjToday.getDate()),
+            value: new Date(before18Year - 10, dateToday),
+            footer: "&nbsp",
+            format: 'dd-MM-yyyy'
+        });
+
+        //date of birth input date for only 18+
+        $('#dtpFilterDateOfBirthTo').kendoDatePicker({
+            max: new Date(before18Year, dateObjToday.getDate()),
+            value: new Date(before18Year, dateToday),
+            footer: "&nbsp",
+            format: 'dd-MM-yyyy'
+        });
+
+        $('#ddlFilterFullName').kendoAutoComplete();
+
+        $('#ddlFilterCountry').kendoAutoComplete({
+            dataSource: countryList,
+            dataTextField: "countryName",
+            change: ddlFilterCountry_change
+        });
+
+        $('#ddlFilterState').kendoDropDownList({
+            dataTextField: "stateName",
+            dataValueField: "stateId"
+
+        });
+
+        /*------------------------- end of filter header -----------------------------*/
+
+        /*------------------------- start of Upload Contact window --------------------*/
+
+        $('#pnlUploadContacts').kendoWindow({
+            width: "400px",
+            title: "Upload Contact",
+            visible: false
+        });
+        $("#btnUploadContatGetSampleSheet").kendoButton({
+            click: function () {
+                downloadAFile(baseUrl + "upload");
+            }
+        });
+        $("#fileUpldChooseExelSheet").kendoUpload({
+            validation: {
+                allowedExtensions: [".xlsx"]
+            },
+            select: fileUpldChooseExelSheet_select,
+            
+        });
+        //$("#fileUpldChooseExelSheet").change(fileUpldChooseExelSheet_select)
+        /*------------------------- end of Upload Contact window------------------------*/
+
+        /*------------------------- start of grid ------------------------------------*/
+        let allContactsKendoDatasource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: baseUrl + "contacts",
+                    dataType: "json",
+                    type: 'GET'
+                },
+            },
+            filter: {
+                logic: "and",
+                filters: [
+                    { field: "dob", operator: "gte", value: new Date(before18Year - 10, dateToday) },
+                    { field: "dob", operator: "lte", value: new Date(before18Year, dateToday) }
+                ]
+            },
+            pageSize: 18,
+            sort: {
+                field: "contactId", dir: "desc"
+            },
+            schema: {
+                model: {
+                    id: "contactId",
+                    fields: {
+                        contactId: { type: "number" },
+                        firstName: { type: "string" },
+                        lastName: { type: "string" },
+                        dob: {
+                            type: "date",
+                            format: "dd-MM-yyyy"
+                        },
+                        country: { type: "string" },
+                        countryId: { type: "number" },
+                        state: { type: "string" },
+                        stateId: { type: "number" },
+                        emailId: { type: "string" },
+                        phone: { type: "number" }
+                    }
+                }
+            },
+            change: grdContactsList_dataSourceChange
+        });
+
+        let runtimeGridHeight = $(window).height() - 155;
+        $("#grdContactsList").kendoGrid({
+            columns: [{
+                selectable: true,
+                width: '6.5em',
+                headerTemplate: '<a class="k-link">Sel.</a>'
+            },
+            {
+                field: "firstName",
+                title: "First Name"
+            },
+            {
+                field: "lastName",
+                title: "Last Name"
+            },
+            {
+                field: "dob",
+                title: "DOB",
+                width: '10em',
+                format: "{0:dd-MM-yyyy}"
+            },
+            {
+                field: "country",
+                title: "Country",
+                width: '17em'
+            },
+            {
+                field: "state",
+                title: "State"
+            },
+            {
+                field: "emailId",
+                title: "Email Id",
+                width: '25em'
+            },
+            {
+                field: "phone",
+                title: "Phone No",
+                width: '16em'
+            }
+            ],
+            dataSource: allContactsKendoDatasource,
+            columnMenu: true,
+            sortable: true,
+            filterable: true,
+            pageable: {
+                pageSize: 18
+            },
+            height: runtimeGridHeight,
+            dataBound: grdContactsList_dataBound
+        });
+
+
+        /*------------------------- end of grid -----------------------------------*/
+
+        /*----------------------- start of Add/update contact window----------------*/
+
+        //add contact window widgets
+
+        //failure dialog
+        $("#dlgAddContactFailure").kendoDialog({
+            title: "Alert!",
+            closable: true,
+            content: "Please Enter proper values",
+            actions: [{ text: "ok" }],
+            visible: false,
+            width: '400px',
+            buttonLayout: 'normal'
+        });
+
+        //Success dialog
+        $("#dlgAddContactSuccess").kendoDialog({
+            title: "Success",
+            closable: true,
+            actions: [{ text: "ok" }],
+            visible: false,
+            width: '400px',
+            buttonLayout: 'normal'
+        });
+
+        //get 18 year back date
+        before18Year = dateObjToday.getFullYear() - 18;
+
+        //date of birth input date for only 18+
+        $('#dtpAddContactDateOfBirth').kendoDatePicker({
+            max: new Date(before18Year, dateObjToday.getDate()),
+            footer: "&nbsp",
+            format: 'dd-MM-yyyy'
+        });
+
+
+        //add contact country autocomplete widget
+        $('#ddlAddContactCountry').kendoAutoComplete({
+            dataSource: countryList,
+            dataTextField: "countryName",
+            change: ddlAddContactCountry_change
+        });
+
+        //add contact state ddl
+        $('#ddlAddContactState').kendoDropDownList({
+            dataTextField: "stateName",
+            dataValueField: "stateId"
+        });
+
+        //add/update contact window
+        $('#pnlAddContact').kendoWindow({
+            width: "400px",
+            title: 'Add New Contact',
+            visible: false,
+            close: function () {
+                clearContactForm();
+            }
+        }).data('kendoWindow').center();
+
+        $('#btnContactFormSubmit').kendoButton()
+        $('#btnContactFormUpdate').kendoButton()
+
+        /*------------------------- end of Add/update contact window---------------------*/
+    });
+
+    //delete confirmation dialog
+    function dlgConfirmDelete_Yes_click(event) {
+        let grid = $("#grdContactsList").data('kendoGrid');
+        let selectedRows = grid.select();
+        let ids = [];
+        $.each(selectedRows, function (itr, row) {
+
+            ids.push(grid.dataItem(row).contactId);
+        });
+        ids = { ContactIds: ids };
+
+        let requestObject = ajaxRequest(baseUrl + "Contacts", "DELETE", ids);
+        requestObject.done(function (responseMessage, status) {
+            if (status === "success") {
+                ajaxSuccessCallback("Contact Deleted Successfully!")
+            }
+        });
+        requestObject.fail(ajaxFailedCallback);
+    }
+
+
+    //set full name array to full name auto complete filter
+    function grdContactsList_dataSourceChange(event) {
+
+        let fullNameArray = [];
+        let grid = $("#grdContactsList").data('kendoGrid');
+        let gridData = grid.dataSource.data();
+
+        $.each(gridData, function (itr) {
+            let dataItem = gridData[itr];
+            let fullName = dataItem.firstName + " " + dataItem.lastName;
+            if ($.inArray(fullName, fullNameArray) === -1) {
+                fullNameArray.push(fullName);
+            }
+        })
+
+        $('#ddlFilterFullName').data('kendoAutoComplete').setDataSource(fullNameArray);
+
+    }
+
+    //main panel delete button click
+    function btnGridDelete_click() {
+        let dialog = $('#dlgConfirmDelete').data('kendoDialog');
+        let grid = $("#grdContactsList").data('kendoGrid');
+        let rowsSelected = grid.select().length
+
+        if (rowsSelected > 0) {
+            dialog.content('<b>You are deleting ' + rowsSelected + ' items. Are You Sure?</b>');
+            dialog.open();
+        }
+    }
+
+    function btnGridUpload_click() {
+        $('#pnlUploadContacts').data("kendoWindow").center().open();
+    }
+    
+    function fileUpldChooseExelSheet_select(data) {
+
+        if (data.files[0].extension === ".xlsx") {
+            //set loading
+            setLoadingGridUi();
+            var rawFile = data.files[0].rawFile
+
+            //upload file
+            let request = uploadExcelSheet(baseUrl + "upload", rawFile.name, rawFile);
+
+            request.onload = function (event) {
+                //reset loading
+                resetLoadingGridUi();
+
+                if (request.status === 200) {
+                    //success dialog
+                    $("#dlgAddContactSuccess").data('kendoDialog').content("Please Check Downloaded sheet for contatcs upload status.").open();
+                } else {
+                    //error dialog
+                    $("#dlgAddContactFailure").data('kendoDialog').content(this.response).open();
+                }
+            }
+        }
+    }
+    function resetLoadingGridUi() {
+        clearFileUpldChooseExelSheet();
+        resetGridLoadingAndRefresh();
+        $("#btnGridUpload").data("kendoButton").enable(true);
+    }
+
+    function setLoadingGridUi() {
+        kendo.ui.progress($("#grdContactsList"), true);
+        $("#btnGridUpload").data("kendoButton").enable(false);
+    }
+    function clearFileUpldChooseExelSheet() {
+        
+        let fileUpldWidget = $("#fileUpldChooseExelSheet").data("kendoUpload");
+        fileUpldWidget.clearAllFiles();
+    }
+
+    function resetGridLoadingAndRefresh() {
+        kendo.ui.progress($("#grdContactsList"), false);
+        //refresh grid
+        var grid = $('#grdContactsList').data('kendoGrid');
+        grid.dataSource.read();
+        grid.refresh();
+    }
+
+    function uploadExcelSheet(url, fileName, rawFile) {
+        var request = new XMLHttpRequest();
+
+        request.addEventListener("readystatechange", function (response) {
+
+            if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+                let a = document.createElement("a");
+                a.href = window.URL.createObjectURL(request.response);
+                a.download = fileName;
+                a.style.display = "none";
+                document.body.appendChild(a);
+                a.click();
+            }
+        })
+
+        var formData = new FormData();
+        formData.append(fileName, rawFile);
+        request.open("POST", url);
+        request.responseType = "blob";
+        request.send(formData);
+
+        return request;
+    }
+
+    function downloadAFile(url) {
+        var temporaryLink = $("<a></a>");
+        temporaryLink.css("display", "none");
+        temporaryLink.attr("href", url);
+        $(document.body).append(temporaryLink);
+        temporaryLink[0].click();
+        temporaryLink.remove();
+    }
+
+    //intialize state widget when in update contact mode
+    function initializeUpdateContactStates(country, stateName) {
+        let stateWidget = $('#ddlAddContactState').data('kendoDropDownList');
+        countryList.read().then(function () {
+            let countryId = countryList.data().find(x => x.countryName === country).countryId;
+
+            $.get(baseUrl + "State/?countryId=" + countryId, function (data, status) {
+                populateStatesOptions(data, stateWidget, stateName);
+            });
+
+        })
+
+    }
+
+
+
+    //if country is empty then make state ddl empty
+    function ddlFilterCountry_change(event, ui) {
+
+        let item = event.sender;
+        let stateWidget = $('#ddlFilterState').data('kendoDropDownList');
+
+        if (item.value().trim() === "") {
+            stateWidget.value("");
+            stateWidget.dataSource.data([]);
+        } else {
+            let stateWidget = $('#ddlFilterState').data('kendoDropDownList');
+            let country = item.value().trim();
+            let countryId = countryList.data().find(x => x.countryName === country).countryId;
+            $.get(baseUrl + "State/?countryId=" + countryId, function (data, status) {
+                if (data !== null) {
+                    populateStatesOptions(data, stateWidget);
+                }
+            });
+        }
+    }
+
+    //trigger function after country value is selected in autocomplete
+    //country widget
+    function ddlAddContactCountry_change(ui) {
+
+        let item = ui.sender;
+        let stateWidget = $('#ddlAddContactState').data('kendoDropDownList');
+
+        if (item.value().trim() === "") {
+            stateWidget.value("");
+            stateWidget.dataSource.data([]);
+        } else {
+            let country = item.value().trim();
+            let countryId = countryList.data().find(x => x.countryName === country).countryId;
+
+            $.get(baseUrl + "State/?countryId=" + countryId, function (data, status) {
+                if (data !== null) {
+                    populateStatesOptions(data, stateWidget);
+                }
+            });
+        }
+
+    }
+
+    /*
+        trigger country select function which appends state options to
+        select widget of country
+        parameter 1 - object having country and state array
+        parameter 2 - input country
+        parameter 3 - state widget to be initialized
+        parameter 4 - state name to sellect (dont send if not want to select)
+    */
+    function populateStatesOptions(countryStatesObj, stateWidget, stateName) {
+
+        stateWidget.setDataSource(countryStatesObj);
+        stateWidget.dataSource.stateData = countryStatesObj;
+        debugger
+        if (stateName !== undefined) {
+            let stateIndex = stateWidget.dataSource.options.data.findIndex(function (data) {
+                return data.stateName === stateName
+            })
+            stateWidget.select(stateIndex);
+        }
+    }
+
+    //submit method of add contact
+    function btnContactFormSubmit_click(event) {
+
+
+        let formObj = $('#pnlAddContact');
+        let data = getAllDataFromForm(formObj);
+        let errorMessage = validateFormAndReturnErrorMessageArray(data);
+
+        if (errorMessage.length === 0) {
+
+            if (!checkForUniqueValeInGrid("emailId", data.emailId)) {
+                errorMessage.push("Email already present");
+            }
+            if (!checkForUniqueValeInGrid("phone", data.phone)) {
+                errorMessage.push("Phone already present");
+            }
+            if (errorMessage.length === 0) {
+                let countryData = $("#ddlAddContactCountry").data("kendoAutoComplete").dataSource.data();
+                debugger
+                data.countryId = countryData.find(x => x.countryName === data.country).countryId
+
+
+                let dataToSend = getContactFromData(data);
+                let requestObject = ajaxRequest(baseUrl + "contacts", "POST", dataToSend);
+                requestObject.done(function (responseMessage, status) {
+                    if (status === "success") {
+                        ajaxSuccessCallback("Contact Added Successfully!")
+                    }
+                });
+                requestObject.fail(ajaxFailedCallback);
+            } else {
+                $("#dlgAddContactFailure").data('kendoDialog').content(errorMessage[0]).open();
+            }
+
+        } else {
+            if (errorMessage.length > 2) {
+                $("#dlgAddContactFailure").data('kendoDialog').content("Please Enter All form fields").open();
+            } else {
+                $("#dlgAddContactFailure").data('kendoDialog').content(errorMessage[0]).open();
+            }
+            errorMessage = [];
+        }
+    }
+
+    function checkForUniqueValeInGrid(fieldName, value, idToIgnore) {
+
+        let grid = $('#grdContactsList').data('kendoGrid');
+        let allRows = grid.dataSource.data();
+
+        var foundItems = allRows.find(item => item[fieldName].toString() === value);
+        if (foundItems === undefined) {
+            return true;
+        } else if (foundItems.uid === idToIgnore) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function clearContactForm() {
+        let formObj = $('#pnlAddContact');
+        formObj.find('input').val("");
+        $('#ddlAddContactState').data('kendoDropDownList').dataSource.data([]);
+    }
+
+    /*
+      function to check and return form validity
+      parameter - form jquery object
+      return(boolean) - true if valid false if invalid
+    */
+    function checkFormValidity(form) {
+
+        let allInputs = form.find("input");
+        let validity = true;
+
+        let length = allInputs.length;
+        for (let i = 0; i < length; i++) {
+            if (!allInputs[i].checkValidity()) {
+                validity = false;
+                break;
+            }
+        }
+        return validity;
+    }
+
+    /*
+      function to extract and return all data from form
+      parameter - form jquery object
+      return(array) - form data in object pushed inside array
+    */
+    function getAllDataFromForm(form) {
+        let allFormFields = form.find(".form-field");
+
+        let valuesObj = {};
+        let length = allFormFields.length;
+        for (let i = 0; i < length; i++) {
+            let formField = allFormFields[i];
+            let formFieldInput = $(formField).find('input, select')
+            let formFieldInputText = $(formFieldInput).val();
+            let formFieldName = $(formFieldInput).attr('name');
+
+            if (formFieldName === 'dob') {
+                valuesObj[formFieldName] = $('#dtpAddContactDateOfBirth').data('kendoDatePicker').value();
+            } else {
+                valuesObj[formFieldName] = formFieldInputText;
+            }
+        }
+        return valuesObj;
+    }
+
+    //bind each row click with update contact logic
+    function grdContactsList_dataBound() {
+        let grid = this;
+        grid.element.off("click", 'tbody tr[data-uid]');
+        grid.element.on("click", 'tbody tr[data-uid]', function (event) {
+
+            let row = event.currentTarget;
+
+            if (!$(event.target).hasClass('k-checkbox')) {
+                openUpdateContactWindow(row);
+            }
+        });
+    }
+
+    //open update contact window
+    function openUpdateContactWindow(row) {
+
+        //set title and open window
+        $('#pnlAddContact').data('kendoWindow').title("Update Contact").center().open();
+
+        let grid = $('#grdContactsList').data('kendoGrid');
+        grid.clearSelection();
+        grid.select(row);
+
+        let data = grid.dataItem(row);
+        let formFields = $('#pnlAddContact').find('input');
+
+        $.each(formFields, function (index) {
+            let inputData = data[$(formFields[index]).attr('name')]
+            $(formFields[index]).val(inputData);
+        });
+
+        $('#dtpAddContactDateOfBirth').data('kendoDatePicker').value(data['dob']);
+
+        //select country programatically first then select proper state
+        let stateName = data['state'];
+        selectCountry(data['country']);
+
+        function selectCountry(value) {
+            $('#ddlAddContactCountry').val(value, initializeUpdateContactStates(value, stateName));
+        }
+
+        //hide the submit button
+        $('#btnContactFormSubmit').hide()
+        $('#btnContactFormUpdate').show();
+    }
+
+    function validateFormAndReturnErrorMessageArray(data) {
+        let errorMessage = [];
+        let dateObjToday = (new Date());
+        let before18Year = dateObjToday.getFullYear() - 18;
+
+        //date of birth input date for only 18+
+        let leagalDateBefore = new Date(before18Year, dateObjToday.getDate());
+
+        if (data.firstName.trim() === "") {
+            errorMessage.push("First name cannot be empty")
+
+        }
+        if (data.lastName.trim() === "") {
+            errorMessage.push("Last name cannot be empty")
+        }
+        if (data.dob === undefined || isNaN(data.dob.getTime())) {
+            errorMessage.push("Enter proprer date of birth")
+        } else if (data.dob > leagalDateBefore) {
+            errorMessage.push("Age must be greater or eqal to 18 years")
+        }
+
+        if (data.country.trim() === "") {
+            errorMessage.push("Country cannot be empty")
+        }
+
+        if (data.emailId.trim() === "") {
+            errorMessage.push("Email Id cannot be empty")
+        }
+        if (data.phone.toString().trim() === "") {
+            errorMessage.push("Phone cannot be empty")
+        }
+
+        return errorMessage;
+    }
+
+    //update contact btn click
+    function btnContactFormUpdate_click(event) {
+
+        let grid = $('#grdContactsList').data('kendoGrid');
+        let formObj = $('#pnlAddContact');
+        let data = getAllDataFromForm(formObj);
+        let selectedRow = grid.select();
+        let selectedIndex = selectedRow.index();
+        let currentRow = grid.dataItems()[selectedIndex];
+        let errorMessage = validateFormAndReturnErrorMessageArray(data);
+
+        if (errorMessage.length === 0) {
+
+            if (!checkForUniqueValeInGrid("emailId", data.emailId, currentRow.uid)) {
+                errorMessage.push("Email already present");
+            }
+            if (!checkForUniqueValeInGrid("phone", data.phone, currentRow.uid)) {
+                errorMessage.push("Phone already present");
+            }
+            if (errorMessage.length === 0) {
+                data.contactId = currentRow.contactId;
+                let countryData = $("#ddlAddContactCountry").data("kendoAutoComplete").dataSource.data();
+                debugger
+
+                data.countryId = countryData.find(x => x.countryName === data.country).countryId
+
+
+                let dataToSend = getContactFromData(data);
+                let requestObject = ajaxRequest(baseUrl + "contacts", "PUT", dataToSend);
+                requestObject.done(function (responseMessage, status) {
+                    if (status === "success") {
+                        ajaxSuccessCallback("Contact Updated Successfully!")
+                    }
+                });
+                requestObject.fail(ajaxFailedCallback);
+
+
+            } else {
+                $("#dlgAddContactFailure").data('kendoDialog').content(errorMessage[0]).open();
+            }
+
+        } else {
+            if (errorMessage.length > 2) {
+                $("#dlgAddContactFailure").data('kendoDialog').content("Please Enter All form fields").open();
+            } else {
+                $("#dlgAddContactFailure").data('kendoDialog').content(errorMessage[0]).open();
+            }
+            errorMessage = [];
+        }
+    }
+
+    function ajaxSuccessCallback(successMessage) {
+
+
+        //clear form
+        clearContactForm();
+
+        //close add contact window
+        $('#pnlAddContact').data('kendoWindow').close();
+
+        //open sucess dialog
+        $("#dlgAddContactSuccess").data('kendoDialog').content(successMessage).open();
+
+        //refresh grid
+        $('#grdContactsList').data('kendoGrid').dataSource.read();
+        $('#grdContactsList').data('kendoGrid').refresh();
+
+    }
+
+    function ajaxFailedCallback() {
+        $("#dlgAddContactFailure").data('kendoDialog').content("Error occured!").open();
+    }
+
+    function getContactFromData(contacts) {
+        let dataToReturn;
+        if (Array.isArray(contacts)) {
+            let temp = [];
+            $.each(contacts, function (index, contact) {
+                temp.push(getSingleContactFromDataObject(contact))
+            });
+            dataToReturn = { Contacts: temp };
+        } else {
+            dataToReturn = getSingleContactFromDataObject(contacts);
+        }
+        return dataToReturn;
+    }
+    function getSingleContactFromDataObject(data) {
+        return {
+            contactId: data.contactId ? data.contactId : 0,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            dob: data.dob.toISOString(),
+            country: data.country,
+            countryId: data.countryId,
+            state: data.state,
+            stateId: data.stateId ? data.stateId : 0,
+            emailId: data.emailId,
+            phone: data.phone,
+        }
+    }
+
+    function btnGridFetch_click(event) {
+
+
+        let dobFrom = $('#dtpFilterDateOfBirthFrom');
+        dobFrom = dobFrom.val().split("-");
+        let dobTo = $('#dtpFilterDateOfBirthTo');
+        dobTo = dobTo.val().split("-");
+
+        let grid = $('#grdContactsList').data('kendoGrid');
+
+        let fromDateObj = $('#dtpFilterDateOfBirthFrom').data('kendoDatePicker').value()
+        let toDateObj = $('#dtpFilterDateOfBirthTo').data('kendoDatePicker').value()
+        let errorMessage = [];
+
+
+        if (dobFrom.length !== 3) {
+            if ($('#dtpFilterDateOfBirthFrom').val() === "") {
+                errorMessage.push("From date should not be Empty");
+            } else {
+                errorMessage.push("Enter from date in proper format");
+            }
+        }
+        if (dobTo.length !== 3) {
+            if ($('#dtpFilterDateOfBirthTo').val() === "") {
+                errorMessage.push("To date should not be Empty");
+            } else {
+                errorMessage.push("Enter to date in proper format");
+            }
+        }
+        if (dobFrom.length === 3 && dobTo.length === 3) {
+            if (!(fromDateObj.getTime() < toDateObj.getTime())) {
+                errorMessage.push("From date should be less than to date");
+            }
+        }
+
+        if (errorMessage.length === 0) {
+            let filters = [
+                { field: "dob", operator: "gte", value: fromDateObj },
+                { field: "dob", operator: "lte", value: toDateObj }
+            ]
+
+            let fullName = $('#ddlFilterFullName').val().trim()
+            let country = $('#ddlFilterCountry').data('kendoAutoComplete').value()
+            let state = $('#ddlFilterState').data('kendoDropDownList').value()
+
+            if (fullName !== "") {
+                fullName = fullName.trim().split(" ");
+                let firstName = fullName[0];
+                let lastName = fullName[1];
+                filters.push({ field: "firstName", operator: "eq", value: firstName });
+                filters.push({ field: "lastName", operator: "eq", value: lastName });
+            }
+
+            if (country !== "") {
+                filters.push({ field: "country", operator: "eq", value: country });
+            }
+
+            if (state !== "") {
+                filters.push({ field: "state", operator: "eq", value: state });
+            }
+
+            let filterToBeApplied = {
+                logic: 'and',
+                filters: filters
+            }
+            grid.dataSource.filter(filterToBeApplied);
+
+        } else {
+            $("#dlgAddContactFailure").data('kendoDialog').content(errorMessage[0]).open();
+
+        }
+    }
+
+    function btnGridClear_click(event) {
+
+        //get 18 year back date
+        let dateObjToday = (new Date());
+        let before18Year = dateObjToday.getFullYear() - 18;
+        let dateToday = dateObjToday.getDate();
+
+        //clear to default
+        $('#dtpFilterDateOfBirthTo').data("kendoDatePicker").value(new Date(before18Year, dateToday));
+        $('#dtpFilterDateOfBirthFrom').data("kendoDatePicker").value(new Date(before18Year - 10, dateToday));
+        $('#ddlFilterFullName').val("");
+        $('#ddlFilterCountry').val("");
+        let state = $('#ddlFilterState').data('kendoDropDownList');
+        state.value("");
+        state.dataSource.data([]);
+
+        //reload grid
+        let grid = $('#grdContactsList').data('kendoGrid');
+        grid.dataSource.filter({});
+
+        //fetch with default dates
+        btnGridFetch_click();
+
+    }
+
+</script>

@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@model  List<String>[]
+<div class="jumbotron">
+    @foreach (var list in Model)
+    {
+        foreach (var stringInput in list)
+        {
+            <div style="display:inline">@stringInput</div>
+        }
+        <br/>
+    }
+</div>
+

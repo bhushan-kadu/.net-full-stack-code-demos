@@ -1,0 +1,530 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<div class="pnlHeader">
+    <div style="font-size: 1.3em; color: #00008b; font-weight: bold;">State List</div>
+    <button id="btnStateGridFetch">Fetch</button>
+    <button id="btnStateGridDelete">Delete</button>
+    <button id="btnStateGridAdd">Add</button>
+    <button id="btnStateGridClear">Clear</button>
+    <button id="btnStateGridClose">Close</button>
+</div>
+<div style="padding: 7px 10px 1px 10px; ">
+    <div class="pnlFilters">
+        <div class="form-field" style="flex: 2;">
+            <div class="form-field-label">
+                <div>State Name</div>
+            </div>
+            <div class="form-field-input">
+                <input type="text" id="ddlStateNameFilter">
+            </div>
+        </div>
+
+        <div class="form-field" style="flex: 2;">
+            <div class="form-field-label">
+                <div>Capital City</div>
+            </div>
+            <div class="form-field-input">
+                <input type="text" id="ddlStateCapitalCityFilter">
+            </div>
+        </div>
+
+        <div class="form-field" style="flex: 2;">
+            <div class="form-field-label">
+                <div>Country Name</div>
+            </div>
+            <div class="form-field-input">
+                <input type="text" id="ddlCountryNameFilter">
+            </div>
+        </div>
+
+    </div>
+    <div id="grdStateList"></div>
+</div>
+<div id="dlgStateConfirmDelete"></div>
+
+<div id="pnlAddState">
+    <div class="form-field">
+        <div class="form-field-label">
+            <div>
+                State Name:
+                <div class="requiredStar">*</div>
+            </div>
+        </div>
+        <div class="form-field-input k-textbox">
+            <input type="text" id="txtAddStateStateName" name="stateName" required>
+        </div>
+    </div>
+
+    <div class="form-field">
+        <div class="form-field-label">
+            <div>
+                Capital Name:
+                <div class="requiredStar">*</div>
+            </div>
+
+        </div>
+        <div class="form-field-input k-textbox">
+            <input type="text" id="txtAddStateCapitalName" required name="stateCapital">
+        </div>
+    </div>
+
+    <div class="form-field">
+        <div class="form-field-label">
+            <div>
+                Country Name:
+                <div class="requiredStar">*</div>
+            </div>
+
+        </div>
+        <div class="form-field-input">
+            <input type="text" id="ddlAddStateCountryName" name="countryName" required>
+        </div>
+    </div>
+
+    <button id="btnStateAddFormSubmit" onclick="btnStateAddFormSubmit_click(event)" class="center-button k-primary">Submit</button>
+    <button id="btnStateUpdateFormSubmit" onclick="btnStateUpdateFormSubmit_click(event)" class="center-button k-primary">Update</button>
+</div>
+
+<div id="dlgAddStateFailure"></div>
+<div id="dlgAddStateSuccess"></div>
+<script>
+
+
+    jQuery(function () {
+        /*------------------------- start of actions panel --------------------------*/
+        $('#btnStateGridFetch').kendoButton({
+            click: btnStateGridFetch_click
+        });
+        $('#btnStateGridDelete').kendoButton({
+            click: btnStateGridDelete_click
+        });
+        $('#btnStateGridAdd').kendoButton({
+            click: function (event) {
+                $('#pnlAddState').data('kendoWindow').title("Add New State").center().open();
+                $('#btnStateUpdateFormSubmit').hide()
+                $('#btnStateAddFormSubmit').show();
+            }
+        });
+        $('#btnStateGridClear').kendoButton({
+            click: btnStateGridClear_click
+        });
+        $('#btnStateGridClose').kendoButton();
+
+        //confirm delete dialog
+        $('#dlgStateConfirmDelete').kendoDialog({
+            title: 'Confirm',
+            width: '400px',
+            content: 'You are deleting 1 item. Are You Sure?',
+            buttonLayout: 'normal',
+            actions: [
+                { text: 'Yes', action: dlgStateConfirmDelete_Yes_click },
+                { text: 'No' }
+            ],
+            visible: false
+        })
+
+        /*------------------------- end of actions panel -------------------------*/
+
+        /*------------------------- start of filter header ----------------------------*/
+
+
+        $('#ddlStateNameFilter').kendoAutoComplete();
+        $('#ddlStateCapitalCityFilter').kendoAutoComplete();
+
+        $('#ddlCountryNameFilter').kendoAutoComplete();
+
+        /*------------------------- end of filter header -----------------------------*/
+        /*------------------------- start of grid ------------------------------------*/
+        let allStatesKendoDatasource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: baseUrl + "state",
+                    dataType: "json",
+                    type: 'GET'
+                },
+            },
+            sort: {
+                field: "stateId", dir: "desc"
+            },
+            pageSize: 18,
+            schema: {
+                model: {
+                    id: "stateId",
+                    fields: {
+                        stateId: { type: "number" },
+                        stateName: { type: "string" },
+                        stateCapital: { type: "string" },
+                        countryName: { type: "string" }
+                    }
+                }
+            },
+            change: grdStateList_dataSourceChange
+        });
+
+        let runtimeStateGridHeight = $(window).height() - 155;
+        $("#grdStateList").kendoGrid({
+            columns: [
+                {
+                    selectable: true,
+                    width: '6.5em',
+                    headerTemplate: '<a class="k-link">Sel.</a>'
+                },
+                {
+                    field: "stateName",
+                    title: "State Name"
+                },
+                {
+                    field: "stateCapital",
+                    title: "Capital City"
+                },
+                {
+                    field: "countryName",
+                    title: "Country Name" 
+                }
+            ],
+            dataSource: allStatesKendoDatasource,
+            columnMenu: true,
+            sortable: true,
+            filterable: true,
+            pageable: {
+                pageSize: 18
+            },
+            height: runtimeStateGridHeight,
+            dataBound: grdStateList_dataBound
+        });
+
+
+        /*------------------------- end of grid -----------------------------------*/
+
+        /*----------------------- start of Add/update contact window----------------*/
+
+        //add contact window widgets
+
+        //failure dialog
+        $("#dlgAddStateFailure").kendoDialog({
+            title: "Alert!",
+            closable: true,
+            content: "Please Enter proper values",
+            actions: [{ text: "ok" }],
+            visible: false,
+            width: '400px',
+            buttonLayout: 'normal'
+        });
+
+        //Success dialog
+        $("#dlgAddStateSuccess").kendoDialog({
+            title: "Success",
+            closable: true,
+            actions: [{ text: "ok" }],
+            visible: false,
+            width: '400px',
+            buttonLayout: 'normal'
+        });
+
+        //add/update contact window
+        $('#pnlAddState').kendoWindow({
+            width: "400px",
+            title: 'Add New Contact',
+            visible: false,
+            close: function () {
+                clearAddUpdateCountryForm();
+            }
+        }).data('kendoWindow').center();
+
+        $('#btnStateAddFormSubmit').kendoButton()
+        $('#btnStateUpdateFormSubmit').kendoButton()
+
+        $('#ddlAddStateCountryName').kendoAutoComplete({
+            dataSource: countryList,
+            dataTextField: "countryName"
+        });
+
+        /*------------------------- end of Add/update contact window---------------------*/
+    });
+
+    //delete confirmation dialog
+    function dlgStateConfirmDelete_Yes_click(event) {
+        let grid = $("#grdStateList").data('kendoGrid');
+        let selectedRows = grid.select();
+        let ids = [];
+        $.each(selectedRows, function (itr, row) {
+            let stateId = grid.dataItem(row).stateId;
+            ids.push(stateId);
+        });
+        ids = { StateIds: ids };
+
+        let requestObject = ajaxRequest(baseUrl + "state", "DELETE", ids);
+        requestObject.done(function (responseMessage, status) {
+            if (status === "success") {
+                //open sucess dialog
+                $("#dlgAddStateSuccess").data('kendoDialog').content("State Deleted Successfullly!").open();
+                //refresh grid
+                $('#grdStateList').data('kendoGrid').dataSource.read();
+                $('#grdStateList').data('kendoGrid').refresh();
+            }
+        });
+        requestObject.fail(ajaxFailedCallback);
+    }
+
+    function checkForUniqueValeInGrid(fieldName, value, idToIgnore) {
+
+        let grid = $('#grdStateList').data('kendoGrid');
+        let allRows = grid.dataSource.data();
+
+        var foundItems = allRows.find(item => item[fieldName].toString() === value);
+        if (foundItems === undefined) {
+            return true;
+        } else if (foundItems.uid === idToIgnore) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //set full name array to full name auto complete filter
+    function grdStateList_dataSourceChange(event) {
+
+        let stateNameArray = [];
+        let stateCapitalArray = [];
+        let countryNameArray = [];
+        let grid = $("#grdStateList").data('kendoGrid');
+        let gridData = grid.dataSource.data();
+
+        $.each(gridData, function (itr) {
+            let dataItem = gridData[itr];
+            stateNameArray.push(dataItem.stateName);
+            stateCapitalArray.push(dataItem.stateCapital);
+            if (countryNameArray.findIndex(x => x == dataItem.countryName) === -1) {
+                countryNameArray.push(dataItem.countryName);
+            }
+        })
+
+        $('#ddlStateNameFilter').data('kendoAutoComplete').setDataSource(stateNameArray);
+        $('#ddlStateCapitalCityFilter').data('kendoAutoComplete').setDataSource(stateCapitalArray);
+        $('#ddlCountryNameFilter').data('kendoAutoComplete').setDataSource(countryNameArray);
+
+    }
+
+    //main panel delete button click
+    function btnStateGridDelete_click() {
+        let dialog = $('#dlgStateConfirmDelete').data('kendoDialog');
+        let grid = $("#grdStateList").data('kendoGrid');
+        let rowsSelected = grid.select().length
+
+        if (rowsSelected > 0) {
+            dialog.content('<b>You are deleting ' + rowsSelected + ' items. Are You Sure?</b>');
+            dialog.open();
+        }
+    }
+
+    //submit method of add country
+    function btnStateAddFormSubmit_click(event) {
+        let formObj = $('#pnlAddState');
+        let data = getAllDataFromForm(formObj);
+        let errorMessage = validateCountryFormAndReturnErrorMessageArray(data);
+
+        if (errorMessage.length === 0) {
+            let countryData = $("#ddlAddStateCountryName").data("kendoAutoComplete").dataSource.data();
+            data.countryId = countryData.find(x => x.countryName === data.countryName).countryId
+           
+            let dataToSend = getStateFromData(data);
+            let requestObject = ajaxRequest(baseUrl + "state", "POST", dataToSend);
+            requestObject.done(function (responseMessage, status) {
+                if (status === "success") {
+                    ajaxSuccessCallback("State Added Successfully!")
+                }
+            });
+            requestObject.fail(ajaxFailedCallback);
+        } else {
+            $("#dlgAddStateFailure").data('kendoDialog').content(errorMessage[0]).open();
+        }
+    }
+
+
+    function clearAddUpdateCountryForm() {
+        let formObj = $('#pnlAddState');
+        formObj.find('input').val("");
+    }
+
+
+    //bind each row click with update contact logic
+    function grdStateList_dataBound() {
+        let grid = this;
+        grid.element.off("click", 'tbody tr[data-uid');
+        grid.element.on("click", 'tbody tr[data-uid]', function (event) {
+
+            let row = event.currentTarget;
+
+            if (!$(event.target).hasClass('k-checkbox')) {
+                openCountryAddUpdateWindow(row);
+            }
+        });
+    }
+
+    //open update contact window
+    function openCountryAddUpdateWindow(row) {
+
+        //set title and open window
+        $('#pnlAddState').data('kendoWindow').title("Update State").center().open();
+
+        let grid = $('#grdStateList').data('kendoGrid');
+        grid.clearSelection();
+        grid.select(row);
+
+        let data = grid.dataItem(row);
+        let formFields = $('#pnlAddState').find('input');
+
+        $.each(formFields, function (index) {
+            let inputData = data[$(formFields[index]).attr('name')]
+            $(formFields[index]).val(inputData);
+        });
+
+        //hide the submit button
+        $('#btnStateAddFormSubmit').hide()
+        $('#btnStateUpdateFormSubmit').show();
+    }
+
+    function validateCountryFormAndReturnErrorMessageArray(data) {
+        let errorMessage = [];
+
+        let stateName = $("#txtAddStateStateName").val();
+        let capitalName = $("#txtAddStateCapitalName").val();
+        let countryName = $("#ddlAddStateCountryName").data('kendoAutoComplete').value();
+
+        if (stateName.trim() === "") {
+            errorMessage.push("State Name Cannot be empty");
+        }
+        if (capitalName.trim() === "") {
+            errorMessage.push("Capital Name Cannot be empty");
+        }
+        if (countryName.trim() === "") {
+            errorMessage.push("Country Name Cannot be empty");
+        }
+
+
+        let grid = $('#grdStateList').data('kendoGrid');
+        let selectedRow = grid.select();
+        let selectedIndex = selectedRow.index();
+        if (selectedIndex !== -1) {
+            let currentRow = grid.dataItems()[selectedIndex];
+
+            if (!checkForUniqueValeInGrid("stateName", data.stateName, currentRow.uid)) {
+                errorMessage.push("State already present");
+            }
+            if (!checkForUniqueValeInGrid("stateCapital", data.stateCapital, currentRow.uid)) {
+                errorMessage.push("State Capital already present");
+            }
+        } else {
+            if (!checkForUniqueValeInGrid("stateName", data.stateName)) {
+                errorMessage.push("State already present");
+            }
+            if (!checkForUniqueValeInGrid("stateCapital", data.stateCapital)) {
+                errorMessage.push("State Capital already present");
+            }
+        }
+        return errorMessage;
+
+    }
+
+    //update contact btn click
+    function btnStateUpdateFormSubmit_click(event) {
+
+        let grid = $('#grdStateList').data('kendoGrid');
+        let formObj = $('#pnlAddState');
+        let data = getAllDataFromForm(formObj);
+        let selectedRow = grid.select();
+        let selectedIndex = selectedRow.index();
+        let currentRow = grid.dataItems()[selectedIndex];
+        let errorMessage = validateCountryFormAndReturnErrorMessageArray(data);
+
+        if (errorMessage.length === 0) {
+            let countryData = $("#ddlAddStateCountryName").data("kendoAutoComplete").dataSource.data();
+            data.countryId = countryData.find(x => x.countryName === data.countryName).countryId
+
+            let dataToSend = getStateFromData(data);
+
+            dataToSend = getStateFromData(data)
+            let requestObject = ajaxRequest(baseUrl + "state", "PUT", dataToSend);
+            requestObject.done(function (responseMessage, status) {
+                if (status === "success") {
+                    ajaxSuccessCallback("State Updated Successfully!")
+                }
+            });
+            requestObject.fail(ajaxFailedCallback);
+
+        } else {
+            $("#dlgAddStateFailure").data('kendoDialog').content(errorMessage[0]).open();
+        }
+    }
+
+    function getStateFromData(data) {
+        return {
+            stateId: data.stateId ? data.stateId : 0,
+            stateName: data.stateName,
+            stateCapital: data.stateCapital,
+            countryName: data.countryName,
+            countryId: data.countryId
+        }
+    }
+
+
+
+
+    function ajaxSuccessCallback(successMessage) {
+        //clear form
+        clearAddUpdateCountryForm();
+
+        //close add contact window
+        $('#pnlAddState').data('kendoWindow').close();
+
+        //open sucess dialog
+        $("#dlgAddStateSuccess").data('kendoDialog').content(successMessage).open();
+
+        //refresh grid
+        $('#grdStateList').data('kendoGrid').dataSource.read();
+        $('#grdStateList').data('kendoGrid').refresh();
+    }
+
+    function ajaxFailedCallback() {
+        $("#dlgAddStateFailure").data('kendoDialog').content("Error occured!").open();
+    }
+
+    function btnStateGridFetch_click(event) {
+
+        let grid = $('#grdStateList').data('kendoGrid');
+        let filters = [];
+        let stateName = $('#ddlStateNameFilter').data('kendoAutoComplete').value();
+        let stateCapital = $('#ddlStateCapitalCityFilter').data('kendoAutoComplete').value();
+        let countryName = $('#ddlCountryNameFilter').data('kendoAutoComplete').value();
+
+        if (stateName !== "") {
+            filters.push({ field: "stateName", operator: "eq", value: stateName });
+        }
+        if (stateCapital !== "") {
+            filters.push({ field: "stateCapital", operator: "eq", value: stateCapital });
+        }
+        if (countryName !== "") {
+            filters.push({ field: "countryName", operator: "eq", value: countryName });
+        }
+
+        let filterToBeApplied = {
+            logic: 'and',
+            filters: filters
+        };
+
+        grid.dataSource.filter(filterToBeApplied);
+    }
+
+    function btnStateGridClear_click(event) {
+        //clear to default
+        $('#ddlStateNameFilter').data('kendoAutoComplete').value("");
+        $('#ddlStateCapitalCityFilter').data('kendoAutoComplete').value("");
+        $('#ddlCountryNameFilter').data('kendoAutoComplete').value("");
+
+        //reload grid
+        let grid = $('#grdStateList').data('kendoGrid');
+        grid.dataSource.filter({});
+    }
+
+</script>

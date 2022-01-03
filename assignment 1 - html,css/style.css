@@ -1,0 +1,123 @@
+body {
+    margin: 0%;
+    font-family: Verdana;
+}
+
+.form-field-label {
+    font-size: 0.65em;
+}
+
+#imgLogo {
+    float: left;
+    height: 55px;
+}
+
+#form-title {
+    text-align: center;
+    color: darkblue;
+    margin: 8px 0 10px 0;
+}
+
+header {
+    overflow: auto;
+    background-color: #e6f2ff;
+    padding: 5px;
+    position: relative;
+    font-weight: bold;
+    width: 98%;
+}
+
+#pageTitle {
+    margin: 0;
+    font-style: italic;
+    float: left;
+    position: absolute;
+    bottom: 5px;
+    display: inline;
+    font-size: 17px;
+}
+
+.pnlForm-box {
+    position: absolute;
+    right: 50px;
+    float: left;
+    margin-top: 6px;
+    background-color: #e6f2ff;
+    border: 1px solid black;
+    width: 35%;
+    padding: 10px 12px 10px 10px;
+    border-radius: 10px;
+}
+
+.divStar {
+    color: red;
+    font-size: 12px;
+    margin-left: 5px;
+    display: inline;
+}
+
+button {
+    background-color: darkblue;
+    color: white;
+    border: none;
+    padding: 2px 2px 2px 2px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    margin-top: 12px;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    display: block;
+    margin: auto;
+}
+
+.inputBoxNumber {
+    display: inline;
+    width: 22%;
+}
+
+.forgotPassLink {
+    text-decoration: underline;
+    color: #365556;
+    width: 100%;
+    margin: auto;
+    font-size: 11px;
+    margin-top: 5px;
+    display: inline;
+    font-weight: bold;
+}
+
+.links {
+    text-align: center;
+    margin-top: 10px;
+}
+
+input {
+    font-weight: bold;
+    border: 1px solid lightgray;
+    font-size: 12px;
+}
+
+.namePassInput-field {
+    width: 100%;
+}
+
+.form-field-label {
+    margin-bottom: 0px;
+}
+
+div.form-field-label {
+    margin-top: 6px;
+    display: inline-block;
+    font-weight: bold;
+}
+
+footer {
+    background-color: #E6F2FF;
+    text-align: center;
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    font-size: 13px;
+    width: 99%;
+}

@@ -1,0 +1,85 @@
+.widget-rows {
+    display: flex;
+    width: 100%;
+}
+
+.add-row-button {
+    margin-left: 10px;
+}
+
+.data-grid-element {
+    width: 520px;
+    margin-top: 10px;
+    border: 1px solid gray;
+}
+
+    .data-grid-element .data-grid-element-header-row {
+        display: flex;
+        width: 100%;
+        border-bottom: 1px solid gray;
+    }
+
+        .data-grid-element .data-grid-element-header-row .sr-no {
+            width: 50px;
+            font-weight: bold;
+            padding-right: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .data-grid-element .data-grid-element-header-row .item-name {
+            width: 280px;
+            padding-right: 10px;
+            font-weight: bold;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .data-grid-element .data-grid-element-header-row .actions {
+            width: 200px;
+            display: flex;
+            font-weight: bold;
+            justify-content: space-between;
+            align-items: center;
+            padding-right: 10px;
+        }
+
+    .data-grid-element .data-grid-element-row {
+        display: flex;
+        width: 100%;
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+
+        .data-grid-element .data-grid-element-row .sr-no {
+            width: 50px;
+            font-weight: bold;
+            padding-right: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .data-grid-element .data-grid-element-row .item-name {
+            width: 280px;
+            padding-right: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .data-grid-element .data-grid-element-row .actions {
+            width: 200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-right: 10px;
+        }
+
+            .data-grid-element .data-grid-element-row .actions div {
+                cursor: pointer;
+                text-decoration: underline;
+                color: blue;
+            }

@@ -1,0 +1,76 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+    <div id='root'></div>
+
+    <script>
+        const widget = document.getElementById('root');
+
+        const pnlAddRow = document.createElement('div')
+        pnlAddRow.setAttribute('id', 'pnlAddRow');
+        pnlAddRow.setAttribute('class', 'widget-rows');
+
+        const inputDiv = document.createElement('div')
+        const txtItemName = document.createElement('input');
+        txtItemName.setAttribute('id', 'txtItemName');
+        txtItemName.style.width = '300px';
+        inputDiv.appendChild(txtItemName);
+
+        const addBtnDiv = document.createElement('div')
+        addBtnDiv.setAttribute('class', 'add-row-button');
+        const addEditBtn = document.createElement('button');
+        addEditBtn.setAttribute('id', 'addEditBtn');
+        addEditBtn.innerHTML = "Add Item";
+        addBtnDiv.appendChild(addEditBtn)
+
+
+        pnlAddRow.appendChild(inputDiv);
+        pnlAddRow.appendChild(addBtnDiv);
+        widget.appendChild(pnlAddRow);
+
+        const grid = document.createElement('div')
+        grid.setAttribute('id', 'grdElements');
+        grid.setAttribute('class', 'data-grid-element');
+
+        const headRow = document.createElement('div')
+        headRow.setAttribute('class', 'data-grid-element-header-row');
+
+        const itemName = document.createElement('div')
+        itemName.setAttribute('class', 'item-name');
+        itemName.innerHTML = 'Item Name';
+
+        const actions = document.createElement('div')
+        actions.setAttribute('class', 'actions');
+        actions.innerHTML = 'Item Name';
+
+        headRow.appendChild(itemName);
+        headRow.appendChild(actions);
+
+        grid.appendChild(headRow);
+
+        widget.appendChild(grid);
+
+        const COLORS = [
+            "AliceBlue",
+            "YellowGreen",
+            "Aqua",
+            "Aquamarine",
+            "DarkKhaki",
+            "DarkSlateGray",
+            "SaddleBrown",
+            "MistyRose",
+            "BlanchedAlmond",
+            "Blue"
+        ]
+    </script>
+    <script type="text/javascript" src="DOM Manipulation\\Element Manipulation\\add\\add-item.js"></script>
+    <script type="text/javascript" src="DOM Manipulation\\Element Manipulation\\edit\\edit-item.js"></script>
+    <script type="text/javascript" src="DOM Manipulation\\Element Manipulation\\delete\\delete-item.js"></script>
+    <script type="text/javascript" src="DOM Manipulation\\CSS Manipulation\\change-item-text-color.js"></script>
+</body>
+
+</html>

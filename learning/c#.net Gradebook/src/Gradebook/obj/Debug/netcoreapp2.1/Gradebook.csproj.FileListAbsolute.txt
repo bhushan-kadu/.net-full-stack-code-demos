@@ -1,0 +1,11 @@
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\c#.net\src\Gradebook\bin\Debug\netcoreapp2.1\Gradebook.deps.json
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\c#.net\src\Gradebook\bin\Debug\netcoreapp2.1\Gradebook.runtimeconfig.json
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\c#.net\src\Gradebook\bin\Debug\netcoreapp2.1\Gradebook.runtimeconfig.dev.json
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\c#.net\src\Gradebook\bin\Debug\netcoreapp2.1\Gradebook.dll
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\c#.net\src\Gradebook\bin\Debug\netcoreapp2.1\Gradebook.pdb
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\c#.net\src\Gradebook\obj\Debug\netcoreapp2.1\Gradebook.csprojAssemblyReference.cache
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\c#.net\src\Gradebook\obj\Debug\netcoreapp2.1\Gradebook.csproj.CoreCompileInputs.cache
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\c#.net\src\Gradebook\obj\Debug\netcoreapp2.1\Gradebook.AssemblyInfoInputs.cache
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\c#.net\src\Gradebook\obj\Debug\netcoreapp2.1\Gradebook.AssemblyInfo.cs
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\c#.net\src\Gradebook\obj\Debug\netcoreapp2.1\Gradebook.dll
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\c#.net\src\Gradebook\obj\Debug\netcoreapp2.1\Gradebook.pdb

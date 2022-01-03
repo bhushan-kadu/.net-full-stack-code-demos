@@ -1,0 +1,44 @@
+.pnlMoreFilters {
+    width: 550px;
+    height: 250px;
+    border: 1px solid black;
+    margin: 5px;
+}
+
+#spanTitle {
+    background-color: azure;
+    border-bottom: 1px solid lightblue;
+    color: #12698f;
+    display: block;
+    padding: 7px 7px 7px 15px;
+    font-size: 0.9em;
+}
+
+.spanInputHeader {
+    font-size: 0.7em;
+    color: #035a80;
+    display: block;
+}
+
+input {
+    width: 100%;
+    border: 1px solid lightblue;
+    border-radius: 5px;
+    font-size: 0.77em !important;
+    font-weight: bold;
+    padding-left: 5px;
+}
+
+input[type=number] {
+    text-align: right;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    appearance: none;
+}
+
+.flexbox {
+    display: flex;
+    flex-flow: column wrap;
+}

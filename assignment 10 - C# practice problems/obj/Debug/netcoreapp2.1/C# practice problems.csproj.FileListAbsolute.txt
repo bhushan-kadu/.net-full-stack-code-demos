@@ -1,0 +1,23 @@
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\C# practice problems\bin\Debug\netcoreapp2.1\C# practice problems.deps.json
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\C# practice problems\bin\Debug\netcoreapp2.1\C# practice problems.runtimeconfig.json
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\C# practice problems\bin\Debug\netcoreapp2.1\C# practice problems.runtimeconfig.dev.json
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\C# practice problems\bin\Debug\netcoreapp2.1\C# practice problems.dll
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\C# practice problems\bin\Debug\netcoreapp2.1\C# practice problems.pdb
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\C# practice problems\obj\Debug\netcoreapp2.1\C# practice problems.csprojAssemblyReference.cache
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\C# practice problems\obj\Debug\netcoreapp2.1\C# practice problems.csproj.CoreCompileInputs.cache
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\C# practice problems\obj\Debug\netcoreapp2.1\C# practice problems.AssemblyInfoInputs.cache
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\C# practice problems\obj\Debug\netcoreapp2.1\C# practice problems.AssemblyInfo.cs
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\C# practice problems\obj\Debug\netcoreapp2.1\C# practice problems.dll
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\C# practice problems\obj\Debug\netcoreapp2.1\C# practice problems.pdb
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\assignment 10 - C# practice problems\bin\Debug\netcoreapp2.1\C# practice problems.deps.json
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\assignment 10 - C# practice problems\bin\Debug\netcoreapp2.1\C# practice problems.runtimeconfig.json
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\assignment 10 - C# practice problems\bin\Debug\netcoreapp2.1\C# practice problems.runtimeconfig.dev.json
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\assignment 10 - C# practice problems\bin\Debug\netcoreapp2.1\C# practice problems.dll
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\assignment 10 - C# practice problems\bin\Debug\netcoreapp2.1\C# practice problems.pdb
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\assignment 10 - C# practice problems\obj\Debug\netcoreapp2.1\C# practice problems.csprojAssemblyReference.cache
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\assignment 10 - C# practice problems\obj\Debug\netcoreapp2.1\C# practice problems.csproj.CoreCompileInputs.cache
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\assignment 10 - C# practice problems\obj\Debug\netcoreapp2.1\C# practice problems.AssemblyInfoInputs.cache
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\assignment 10 - C# practice problems\obj\Debug\netcoreapp2.1\C# practice problems.AssemblyInfo.cs
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\assignment 10 - C# practice problems\obj\Debug\netcoreapp2.1\C# practice problems.dll
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\assignment 10 - C# practice problems\obj\Debug\netcoreapp2.1\C# practice problems.pdb
+C:\Users\bhushan.kadu\Documents\Bhushan Workspace\assignment 10 - C# practice problems\obj\Debug\netcoreapp2.1\C# practice problems.genruntimeconfig.cache
