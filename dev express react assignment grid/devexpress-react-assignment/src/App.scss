@@ -1,0 +1,173 @@
+/*new*/
+
+$color-primary-light: #daecf4;
+$color-primary-dark: #003f59;
+$color-primary: #93c8df;
+$primary-background: $color-primary-light !important;
+.dx-texteditor.dx-editor-outlined {
+    border: 1px solid $color-primary;
+}
+
+body {
+    margin: 0;
+    font-size: 0.65em;
+    font-family: sans-serif;
+}
+
+header {
+    display: flex;
+    background-color: #e6f2ff;
+    padding: 0.3em;
+}
+
+#pnlHead {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-content: flex-end;
+}
+
+.navigation-ui {
+    font-size: 1.1em;
+    display: flex;
+    flex-flow: row wrap;
+    margin-bottom: 0.5em;
+    color: 00008b;
+}
+
+#imgLogo {
+    float: left;
+    height: 52px;
+    width: 78px;
+    margin-right: 2em;
+}
+
+.head-links {
+    background-color: lavender;
+    padding: 0.3em;
+    margin-right: 0.5em;
+    border-radius: 3px;
+}
+
+.overflow {
+    height: 200px;
+}
+
+a#submitButton {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    width: 100%;
+}
+
+.form-styling {
+    border: 1px solid #31a8db;
+    margin: 1em;
+    width: 30%;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+}
+
+.form-field {
+    padding: 0 0.9em 0 0;
+    flex: 1
+}
+
+.form-field-label {
+    margin-bottom: 0.3em;
+}
+
+.requiredStar {
+    color: red;
+    font-size: 0.8em;
+    margin-left: 5px;
+    display: inline;
+    margin-left: 0px;
+}
+
+.dx-textbox,
+.k-autocomplete,
+.k-dropdown,
+.k-datepicker {
+    margin-bottom: 0.2em;
+    width: 100%;
+    font-weight: bold !important;
+}
+
+.add-contact-button {
+    /* display: block; */
+    padding-top: 15px !important;
+    margin: auto !important;
+}
+
+.pnlFilters {
+    display: flex;
+    padding-bottom: 10px;
+    padding: 7px 10px 10px 10px;
+}
+
+.pnlHeader {
+    padding-left: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    padding-right: 0.8em;
+    display: flex;
+    align-items: flex-end;
+    border-bottom: 2px solid rgb(10, 99, 134);
+}
+
+.k-dialog .k-button {
+    margin-left: 1.4em !important;
+}
+
+.k-dialog .k-dialog-buttongroup {
+    padding-right: 1.4em !important;
+    padding-bottom: 1em !important;
+    border: none !important;
+}
+
+.mdeButton {
+    margin-left: 0.4em !important;
+    font-weight: bold !important;
+}
+
+.invisible {
+    display: none !important;
+}
+
+.visible {
+    display: block;
+}
+
+.addContactPanel,
+.addPanel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.addContactPanel .form-field {
+    padding: 0;
+}
+
+.Loading {
+    position: absolute;
+    height: 150px;
+    z-index: 100;
+}
+
+.Loading-panel {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 90%;
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: contrast(.8);
+}
+
+div[id^="btn"] {
+    align-self: flex-start;
+}

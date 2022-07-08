@@ -1,0 +1,9 @@
+@import 'App';
+.dx-row-alt>td {
+    background-color: $primary-background;
+}
+
+.dx-datagrid-headers {
+    background-color: $primary-background;
+    color: $color-primary-dark !important;
+}

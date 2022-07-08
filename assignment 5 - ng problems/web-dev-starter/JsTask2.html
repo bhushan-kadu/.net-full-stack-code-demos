@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h1 ng-if="abc+xyz >= 10">Your Name</h1>
+    <h1 ng-if="true">is</h1>
+    <h1 ng-if="false">Bhusahn</h1>
+    <h1 ng-if="true">Kadu</h1>
+
+    <script src="utils.js"></script>
+    <script>
+        var abc = 10;
+        var xyz = 65;
+
+        function processDivs() {
+            /* 
+             ** Find the element with ng-if attribute get the value of that attribute
+             ** Process that expression if value is true then show that element else hide it
+             ** NOTE :- You should take help of javascript inbuilt eval() function
+             */
+
+            //extract all ng-if elements
+            let ngIfElements = findAndReturnElementsHavingGivenAttributeName('ng-if');
+
+            if (ngIfElements.length > 0) {
+
+                //loop throungh found elements and set display property 
+                //according to eval() value of expression
+                ngIfElements.forEach(element => {
+                    let attributeValue = element.getAttribute('ng-if');
+                    if (!eval(attributeValue)) {
+                        element.setAttribute("style", "display:none");
+                    }
+                });
+            }
+        }
+        processDivs();
+        xyz = 0;
+        processDivs();
+    </script>
+
+</body>
+
+</html>

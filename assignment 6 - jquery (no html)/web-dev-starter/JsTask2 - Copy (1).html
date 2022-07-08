@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="jquery.js"></script>
+</head>
+
+<body>
+    <button id="btnClickMe">Click Me</button>
+    <script>
+        /*
+         ** COMPLETE THE BIND EVENT FUNCTION SUCH THAT IT WILL BIND A JQuery ONCLICK EVENT TO BUTTON WHICH WILL SHOW A ALERT
+         ** WRITE A TRIGGER EVENT FUNCTION WHICH WILL TRIGGER JQuery ONCLICK EVENT MANUALLY
+         */
+        let button = $('#btnClickMe');
+
+        function bindEvent() {
+            button.click(function() {
+                alert();
+            });
+        }
+
+        function triggerEvent() {
+            button.click();
+        }
+
+        $(document).ready(function() {
+            bindEvent();
+            triggerEvent();
+        })
+    </script>
+
+</body>
+
+</html>

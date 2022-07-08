@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <script src="js/jquery.min.js"></script>
+
+    <!-- DevExtreme themes -->
+    <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/20.2.6/css/dx.common.css">
+    <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/20.2.6/css/dx.light.css">
+
+    <!-- DevExtreme library -->
+    <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/20.2.6/js/dx.all.js"></script>
+
+    <script src="utils.js"></script>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <header>
+        <div><img src="logo.png" alt="logo" id="imgLogo" /> </div>
+        <div id="pnlHead">
+            <div style="margin: 0.8em 1em 1.5em 0; display: flex;">Welcome
+                <div style="margin-left: 1em;"> OFFICEBOX SUPPORT</div>
+            </div>
+            <div class="navigation-ui">
+                <div><a href="#" class="head-links">COMPANY1</a></div>
+                <div><a href="#" class="head-links">DEFAULT REGION</a></div>
+                <div><a href="#" class="head-links">DEFAULT BRANCH</a></div>
+                <div><a href="#" class="head-links">UNIT 1</a></div>
+                <div><a href="#" class="head-links">FY2019-2020</a></div>
+            </div>
+        </div>
+        <div style="margin: 0.3em 0.3em 0 0">
+            <button id="btnHeaderHelp">Help</button>
+            <button id="btnHeaderHome">Home</button>
+            <button id="btnHeaderLogout">Logout</button>
+        </div>
+
+    </header>
+
+    <div class="pnlHeader">
+        <div style="font-size: 1.3em; color: #00008b; font-weight: bold;">Contact List</div>
+        <button id="btnGridFetch">Fetch</button>
+        <button id="btnGridDelete">Delete</button>
+        <button id="btnGridAdd">Add</button>
+        <button id="btnFilterClear">Clear</button>
+        <button id="btnGridClose">Close</button>
+    </div>
+
+    <div style="padding: 7px 10px 1px 10px; ">
+        <div class="pnlFilters">
+
+            <div class="form-field">
+                <div class="form-field-label">
+                    <div>DOB From Date
+                        <div class="requiredStar">*</div>
+                    </div>
+                </div>
+                <div class="form-field-input">
+                    <div id="dtpFilterDateOfBirthFrom" type="date" required></div>
+                </div>
+            </div>
+            <div class="form-field">
+                <div class="form-field-label">
+                    <div>DOB To Date
+                        <div class="requiredStar">*</div>
+                    </div>
+
+                </div>
+                <div class="form-field-input">
+                    <div id="dtpFilterDateOfBirthTo" type="date" required></div>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-field-label">
+                    <div>Contact Name
+                    </div>
+
+                </div>
+                <div class="form-field-input">
+                    <div id="ddlFilterFullName" type="text"></div>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-field-label">
+                    <div>Country</div>
+                </div>
+                <div class="form-field-input">
+                    <div type="text" id="ddlFilterCountry"></div>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-field-label">
+                    <div>State</div>
+                </div>
+                <div class="form-field-input">
+                    <div id="ddlFilterState"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="grdContactsList"></div>
+    </div>
+
+
+    <div id="dlgConfirmDelete"></div>
+
+    </div>
+    <div id="pnlAddContactPopup"></div>
+    <div id="pnlAddContact" style="display: none;">
+        <div class="form-field">
+            <div class="form-field-label">
+                <div>First Name:
+                    <div class="requiredStar">*</div>
+                </div>
+            </div>
+            <div class="form-field-input k-textbox">
+                <div type="text" id="txtFirstName" name="firstName" max="15" maxlength="15" required></div>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <div class="form-field-label">
+                <div>Last Name:
+                    <div class="requiredStar">*</div>
+                </div>
+
+            </div>
+            <div class="form-field-input k-textbox">
+                <div type="text" id="txtLastName" name="lastName" max="15" maxlength="15" required></div>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <div class="form-field-label">
+                <div>Date of Birth:
+                    <div class="requiredStar">*</div>
+                </div>
+
+            </div>
+            <div class="form-field-input">
+                <div id="dtpAddContactDateOfBirth" name="DOB" required></div>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <div class="form-field-label">
+                <div>Country:
+                    <div class="requiredStar">*</div>
+                </div>
+
+            </div>
+            <div class="form-field-input">
+                <div type="text" id="ddlAddContactCountry" name="country" required></div>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <div class="form-field-label">
+                <div>State:</div>
+            </div>
+            <div class="form-field-input">
+                <div id="ddlAddContactState" name="state"></div>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <div class="form-field-label">
+                <div>Email:
+                    <div class="requiredStar">*</div>
+                </div>
+
+            </div>
+            <div class="form-field-input k-textbox">
+                <div type="email" id="txtEmail" required name="emailId"></div>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <div class="form-field-label">
+                <div>Phone:
+                    <div class="requiredStar">*</div>
+                </div>
+
+            </div>
+            <div class="form-field-input k-textbox">
+                <div type="tel" pattern="[0-9]{10}" max="10" min="10" maxlength="10" id="txtPhone" required name="phone"></div>
+            </div>
+        </div>
+
+        <button id="btnContactFormSubmit" onclick="btnContactFormSubmit_click(event)" style="margin-top: 15px !important;">Submit</button>
+        <button id="btnContactFormUpdate" onclick="btnContactFormUpdate_click(event)" style="margin-top: 15px !important;">Update</button>
+    </div>
+    <div id="dlgAddContactFailure"></div>
+    <div id="dlgAddContactSuccess"></div>
+</body>
+
+</html>

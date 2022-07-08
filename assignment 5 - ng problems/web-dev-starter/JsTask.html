@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h5 ng-repeat="x in records"></h5>
+    <h5 ng-repeat="x in records"></h5>
+    <h5 ng-repeat="x in newJoinees"></h5>
+    <h5 ng-repeat="x in records"></h5>
+    <h5 ng-repeat="x in k"></h5>
+    <h5 ng-repeat="x in records"></h5>
+    <h5 ng-repeat="x in records"></h5>
+
+
+    <script src="utils.js"></script>
+    <script>
+        var records = [
+            "Alfreds Futterkiste",
+            "Berglunds snabbköp",
+            "Centro comercial Moctezuma",
+            "Ernst Handel",
+        ]
+
+        var newJoinees = ['Bhushan', "harshal", "Ashutosh"];
+        var k = ['k', "j", "i"];
+
+        function processDivs() {
+            /* 
+               ** Find the element with ng-repeat attribute get the value of that attribute
+               ** Process that expression such that it will repeat the element with value in it
+               ** for above h1 output should be like
+               <!DOCTYPE html>
+               <html>
+               <body>
+               <h1>Alfreds Futterkiste</h1>
+               <h1>Berglunds snabbköp</h1>
+               <h1>Centro comercial Moctezuma</h1>
+               <h1>Ernst Handel</h1>
+               </body>
+               </html>
+            */
+            let body = document.body;
+            let bodyChilds = body.childNodes;
+
+            let ngRepeatElementsArray = findAndReturnElementsHavingGivenAttributeName('ng-repeat');
+            console.log(ngRepeatElementsArray);
+            if (ngRepeatElementsArray.length > 0) {
+                ngRepeatElementsArray.forEach((currentElement) => {
+
+                    //extract tag name
+                    let tagName = currentElement.tagName;
+                    //extract ng-repeat attribute value
+                    let attributeValue = currentElement.getAttribute('ng-repeat');
+                    //extract array to repeat from attribute value
+                    attributeValue = attributeValue.split(" ");
+                    let arrayName = attributeValue[attributeValue.length - 1];
+                    //access array from extracted array name
+                    let requiredArray = window[arrayName];
+
+                    //loop through accessed array and append elements
+                    requiredArray.forEach((arrayContentItem) => {
+                        let newElement = createAHtmlElement(tagName, null, arrayContentItem);
+                        document.body.insertBefore(newElement, currentElement);
+                    })
+
+                    //remove ng repeat element
+                    currentElement.remove();
+                })
+            }
+        }
+        processDivs();
+    </script>
+</body>
+
+</html>
